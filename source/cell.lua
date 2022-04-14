@@ -7,14 +7,7 @@ self.row = row
 self.isOccupied = isOccupied
 self.neighbors = {}
 self.nextState = "empty"
-end
-function Cell:init()
-    self.column = 0
-    self.row = 0
-    self.occupied = true
-    self.neighbors = {}
-    self.occupiedNeighbors = 0
-    self.nextState = "empty"
+print(self.isOccupied)
 end
 
 function Cell:addNeighbor(cell,index)
@@ -23,9 +16,9 @@ end
 
 function Cell:update()
     if(self.nextState == "empty") then
-        self.isOccupied = false
+        self.isOccupied = 0
     else
-        self.isOccupied = true
+        self.isOccupied = 1
     end
 end
 
@@ -35,7 +28,7 @@ function Cell:countOcuupiedNeighbors()
     for i = 1,9,1
     do
         neighbor = neighbors[i]
-        if(neighbor.occupied) then
+        if(neighbor.isOccupied == 1) then
             self.occupiedNeighbors = self.occupiedNeighbors +1
         end  
     end
