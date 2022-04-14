@@ -1,38 +1,35 @@
 import "CoreLibs/object"
 local gfx = playdate.graphics
-class('Cell').extends(gfx.sprite)
+class('Cell').extends()
 function Cell:init(row,column,isOccupied)
 self.column = column
 self.row = row
 self.isOccupied = isOccupied
 self.neighbors = {}
 self.nextState = "empty"
-print(self.isOccupied)
 end
 
 function Cell:addNeighbor(cell,index)
-    self.neightbors[index] = cell
+    self.neighbors[index] = cell
 end
 
 function Cell:update()
-    if(self.nextState == "empty") then
-        self.isOccupied = 0
-    else
-        self.isOccupied = 1
-    end
+    print("Updating")
+    self.isOccupied = self.nextState
 end
 
 function Cell:countOcuupiedNeighbors()
-    local neighbor = nil
+    local neighbor 
     self.occupiedNeighbors = 0
-    for i = 1,9,1
+    for i = 1,#self.neighbors,1
     do
-        neighbor = neighbors[i]
+        neighbor = self.neighbors[i]
         if(neighbor.isOccupied == 1) then
+            print("Neigbor#",i,neighbor.row,neighbor.column)
             self.occupiedNeighbors = self.occupiedNeighbors +1
         end  
     end
-    print(self.occupiedNeighbors)
+
 end
 
 function Cell:checkForDecay()

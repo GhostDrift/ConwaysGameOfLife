@@ -35,8 +35,49 @@ function populateRows()
 					cell:addNeighbor(rows[i + 1].column[j -1],2)
 					cell:addNeighbor(rows[i+1].column[j],3)
 				else
-					
+					cell:addNeighbor(rows[i].column[j + 1],1)
+					cell:addNeighbor(rows[i + 1].column[j +1],2)
+					cell:addNeighbor(rows[i+1].column[j],3)
+					cell:addNeighbor(rows[i + 1].column[j - 1],4)
+					cell:addNeighbor(rows[i].column[j -1],5)
 				end
+			elseif i == 15 then
+				if j == 1 then
+					cell:addNeighbor(rows[i-1].column[j],1)
+					cell:addNeighbor(rows[i -1].column[j +1],2)
+					cell:addNeighbor(rows[i].column[j + 1],3)
+				elseif j == 25 then
+					cell:addNeighbor(rows[i].column[j - 1],1)
+					cell:addNeighbor(rows[i - 1].column[j -1],2)
+					cell:addNeighbor(rows[i-1].column[j],3)
+				else
+					cell:addNeighbor(rows[i].column[j - 1],1)
+					cell:addNeighbor(rows[i - 1].column[j -1],2)
+					cell:addNeighbor(rows[i-1].column[j],3)
+					cell:addNeighbor(rows[i - 1].column[j + 1],4)
+					cell:addNeighbor(rows[i].column[j +1],5)
+				end
+			elseif j == 1 then
+				cell:addNeighbor(rows[i-1].column[j],1)
+				cell:addNeighbor(rows[i - 1].column[j +1],2)
+				cell:addNeighbor(rows[i].column[j + 1],3)
+				cell:addNeighbor(rows[i - 1].column[j + 1],4)
+				cell:addNeighbor(rows[i+1 ].column[j],5)
+			elseif j == 25 then
+				cell:addNeighbor(rows[i+1].column[j],1)
+				cell:addNeighbor(rows[i + 1].column[j -1],2)
+				cell:addNeighbor(rows[i].column[j - 1],3)
+				cell:addNeighbor(rows[i - 1].column[j - 1],4)
+				cell:addNeighbor(rows[i-1 ].column[j],5)
+			else
+				cell:addNeighbor(rows[i+1].column[j],1)
+				cell:addNeighbor(rows[i + 1].column[j -1],2)
+				cell:addNeighbor(rows[i].column[j - 1],3)
+				cell:addNeighbor(rows[i - 1].column[j - 1],4)
+				cell:addNeighbor(rows[i-1 ].column[j],5)
+				cell:addNeighbor(rows[i-1].column[j +1], 6)
+				cell:addNeighbor(rows[i].column[j +1],7)
+				cell:addNeighbor(rows[i +1].column[j + 1],8)
 			end
 		end
 	end
@@ -73,9 +114,29 @@ end
 function initialize()
 	populateRows()
 end
+
+function updateCells()
+	
+	for i = 1,15,1 do
+		for j = 1,25,1 do
+			rows[i].column[j]:growOrDecay()
+		end
+	end
+	for i = 1,15,1 do
+		for j = 1,25,1 do
+			rows[i].column[j]:update()
+		end
+	end
+end
 initialize()
 drawGrid()
 function playdate.update()
+	if isRunning then
+		isRunning = false
+		updateCells()
+		drawGrid()		
+		isRunning = true
+	end
 	grid:draw(0,0)
 end
 local function select(column,row)
@@ -90,9 +151,13 @@ local function toggleCell(cell)
 end
 function playdate.AButtonDown() -- not updateing the display
 	local cell = rows[selectedRow].column[selectedColumn]
-	print(cell.isOccupied)
-	toggleCell(cell)	
-	print(cell.isOccupied)
+	toggleCell(cell)
+	cell:countOcuupiedNeighbors()
+	print(cell.occupiedNeighbors)	
+end
+function playdate.BButtonDown()
+	isRunning = not isRunning
+	print("isRunning",isRunning)
 end
 
 function playdate.leftButtonDown()
@@ -100,7 +165,7 @@ function playdate.leftButtonDown()
 end
 
 function playdate.rightButtonDown()
-	if selectedColumn < 16 then select(selectedColumn+1, selectedRow) end
+	if selectedColumn < 25 then select(selectedColumn+1, selectedRow) end
 end
 function playdate.upButtonDown()
 	if selectedRow > 1 then select(selectedColumn, selectedRow-1) end
