@@ -21,6 +21,25 @@ function populateRows()
 	for i = 1,15,1 do
 		rows[i] = Row(i)
 	end
+	local cell
+	for i = 1,15,1 do
+		for j = 1,25,1 do
+			cell = rows[i].column[j]
+			if i == 1 then
+				if j == 1 then
+					cell:addNeighbor(rows[i].column[j + 1],1)
+					cell:addNeighbor(rows[i + 1].column[j +1],2)
+					cell:addNeighbor(rows[i+1].column[j],3)
+				elseif j == 25 then
+					cell:addNeighbor(rows[i].column[j - 1],1)
+					cell:addNeighbor(rows[i + 1].column[j -1],2)
+					cell:addNeighbor(rows[i+1].column[j],3)
+				else
+					
+				end
+			end
+		end
+	end
 end
 
 
@@ -30,19 +49,15 @@ local function drawCell(col,row)
 	if col == selectedColumn and row == selectedRow then width = SELECTION_WIDTH end
 	
 	local x = (col-1)*ROW_HEIGHT + CELL_INSET
-	local y = (row-1) * ROW_HEIGHT + CELL_INSET
+	local y = (row-1) *ROW_HEIGHT + CELL_INSET
 	local s = ROW_HEIGHT - 2*CELL_INSET
 	
 	gfx.setColor(gfx.kColorBlack)
 	gfx.drawRect(x, y, s, s, width)
 
-	-- local val = tracks[row].notes[col]
 	local val = rows[row].column[col].isOccupied
-	-- print(row,col,val)
-	print(rows[row].number)
 	if val == 1 then
-		--gfx.setDitherPattern(1-val/LEVEL_INCREMENTS, gfx.image.kDitherTypeBayer4x4)
-		gfx.fillRect(x+1, y+1, s-2, s-2)
+		gfx.fillRect(x+2, y+2, s-4, s-4)
 	end
 end
 local function drawGrid()
@@ -57,11 +72,40 @@ end
 
 function initialize()
 	populateRows()
-	rows[1].column[1].isOccupied = 1
-	rows[2].column[1].isOccupied = 1
 end
 initialize()
 drawGrid()
 function playdate.update()
 	grid:draw(0,0)
+end
+local function select(column,row)
+	selectedRow = row
+	selectedColumn = column
+	drawGrid()
+end
+
+local function toggleCell(cell)
+	cell:toggleIsOccupied()
+	drawGrid()
+end
+function playdate.AButtonDown() -- not updateing the display
+	local cell = rows[selectedRow].column[selectedColumn]
+	print(cell.isOccupied)
+	toggleCell(cell)	
+	print(cell.isOccupied)
+end
+
+function playdate.leftButtonDown()
+	if selectedColumn > 1 then select(selectedColumn-1, selectedRow) end
+end
+
+function playdate.rightButtonDown()
+	if selectedColumn < 16 then select(selectedColumn+1, selectedRow) end
+end
+function playdate.upButtonDown()
+	if selectedRow > 1 then select(selectedColumn, selectedRow-1) end
+end
+
+function playdate.downButtonDown()
+	if selectedRow < 15 then select(selectedColumn, selectedRow+1) end
 end

@@ -57,15 +57,23 @@ function Cell:growOrDecay()
     self:countOcuupiedNeighbors()
     if(self.isOccupiped) then
         if(self:checkForDecay())then
-            self.nextState = "empty"
+            self.nextState = 0
         else 
-            self.nextState = "occupied"
+            self.nextState = 1
         end 
     else
         if(self:checkForGrowth()) then
-           self.nextState = "occupied" 
+           self.nextState = 1
         else
-            self.nextState = "empty"
+            self.nextState = 0
         end
+    end
+end
+
+function Cell:toggleIsOccupied()
+    if(self.isOccupied == 1) then
+        self.isOccupied = 0
+    else 
+        self.isOccupied = 1
     end
 end
