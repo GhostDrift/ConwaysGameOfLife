@@ -14,8 +14,10 @@ function Cell:addNeighbor(cell,index)
 end
 
 function Cell:update()
-    print("Updating")
-    self.isOccupied = self.nextState
+    if(self.isOccupied ~= self.nextState) then
+        
+        self.isOccupied = self.nextState
+    end
 end
 
 function Cell:countOcuupiedNeighbors()
@@ -25,7 +27,7 @@ function Cell:countOcuupiedNeighbors()
     do
         neighbor = self.neighbors[i]
         if(neighbor.isOccupied == 1) then
-            print("Neigbor#",i,neighbor.row,neighbor.column)
+            -- print("Neigbor#",i,neighbor.row,neighbor.column)
             self.occupiedNeighbors = self.occupiedNeighbors +1
         end  
     end

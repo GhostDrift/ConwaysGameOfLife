@@ -2,6 +2,7 @@ import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
+import "CoreLibs/crank"
 import "Cell"
 import "Row"
 
@@ -13,7 +14,6 @@ local SELECTION_WIDTH = 2
 rows = {}
 selectedColumn = 1
 selectedRow = 1
-isRunning = false
 playdate.display.setInverted(true)
 
 
@@ -116,7 +116,7 @@ function initialize()
 end
 
 function updateCells()
-	
+	print("updating cells")
 	for i = 1,15,1 do
 		for j = 1,25,1 do
 			rows[i].column[j]:growOrDecay()
@@ -127,15 +127,18 @@ function updateCells()
 			rows[i].column[j]:update()
 		end
 	end
+	print("done updating")
 end
 initialize()
 drawGrid()
 function playdate.update()
-	if isRunning then
-		isRunning = false
-		updateCells()
-		drawGrid()		
-		isRunning = true
+	--local crankChange = playdate.getCrankTicks(3)
+	local crankChange = playdate.getCrankChange()
+	if(crankChange ~= 0) then
+		if(crankChange >0)then
+			updateCells()
+			drawGrid()
+		end
 	end
 	grid:draw(0,0)
 end
@@ -149,15 +152,16 @@ local function toggleCell(cell)
 	cell:toggleIsOccupied()
 	drawGrid()
 end
-function playdate.AButtonDown() -- not updateing the display
+function playdate.AButtonDown() 
 	local cell = rows[selectedRow].column[selectedColumn]
 	toggleCell(cell)
 	cell:countOcuupiedNeighbors()
 	print(cell.occupiedNeighbors)	
 end
+
 function playdate.BButtonDown()
-	isRunning = not isRunning
-	print("isRunning",isRunning)
+	updateCells()
+	drawGrid()
 end
 
 function playdate.leftButtonDown()
