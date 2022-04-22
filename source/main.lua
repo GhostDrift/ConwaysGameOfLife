@@ -114,9 +114,17 @@ end
 function initialize()
 	populateRows()
 end
+local function clearCells()
+	for i = 1, 15, 1 do
+		for j = 1,25,1 do
+			rows[i].column[j].isOccupied = 0
+		end
+	end
+	drawGrid()
+end
 
 function updateCells()
-	print("updating cells")
+	--print("updating cells")
 	for i = 1,15,1 do
 		for j = 1,25,1 do
 			rows[i].column[j]:growOrDecay()
@@ -127,13 +135,13 @@ function updateCells()
 			rows[i].column[j]:update()
 		end
 	end
-	print("done updating")
+	--print("done updating")
 end
 initialize()
 drawGrid()
 function playdate.update()
-	--local crankChange = playdate.getCrankTicks(3)
-	local crankChange = playdate.getCrankChange()
+	local crankChange = playdate.getCrankTicks(4)
+	-- local crankChange = playdate.getCrankChange()
 	if(crankChange ~= 0) then
 		if(crankChange >0)then
 			updateCells()
@@ -160,8 +168,7 @@ function playdate.AButtonDown()
 end
 
 function playdate.BButtonDown()
-	updateCells()
-	drawGrid()
+	clearCells()
 end
 
 function playdate.leftButtonDown()
