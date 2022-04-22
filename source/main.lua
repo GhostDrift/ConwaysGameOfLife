@@ -3,6 +3,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 import "CoreLibs/crank"
+import "CoreLibs/ui"
 import "Cell"
 import "Row"
 
@@ -11,6 +12,7 @@ local grid = gfx.image.new(400,240)
 local ROW_HEIGHT = 16
 local CELL_INSET = 2
 local SELECTION_WIDTH = 2
+local sounds = {}
 rows = {}
 selectedColumn = 1
 selectedRow = 1
@@ -82,7 +84,13 @@ function populateRows()
 		end
 	end
 end
-
+local function initializeSounds()
+	sounds[1] = playdate.sound.fileplayer.new("sounds/CongaHi")
+	sounds[2] = playdate.sound.fileplayer.new("sounds/Rimshot")
+	sounds[3] = playdate.sound.fileplayer.new("sounds/CongaLow")
+	sounds[4] = playdate.sound.fileplayer.new("sounds/CongaMid")
+	sounds[5] = playdate.sound.fileplayer.new("sounds/Maraca")
+end
 
 local function drawCell(col,row)
 	local width = 1
@@ -113,6 +121,8 @@ end
 
 function initialize()
 	populateRows()
+	initializeSounds()
+	playdate.ui.crankIndicator:start()
 end
 local function clearCells()
 	for i = 1, 15, 1 do
@@ -121,6 +131,7 @@ local function clearCells()
 		end
 	end
 	drawGrid()
+	sounds[5]:play()
 end
 
 function updateCells()
@@ -139,13 +150,26 @@ function updateCells()
 end
 initialize()
 drawGrid()
+local reverseCount = 0
 function playdate.update()
+	if(playdate.isCrankDocked())then
+		playdate.ui.crankIndicator:update()
+	end
+
 	local crankChange = playdate.getCrankTicks(4)
 	-- local crankChange = playdate.getCrankChange()
 	if(crankChange ~= 0) then
 		if(crankChange >0)then
 			updateCells()
+			sounds[2]:play()
 			drawGrid()
+		elseif (crankChange < 0) then
+			if(reverseCount == -4) then
+				clearCells()
+				reverseCount = 0
+			else
+				reverseCount = reverseCount + crankChange
+			end	
 		end
 	end
 	grid:draw(0,0)
@@ -158,13 +182,16 @@ end
 
 local function toggleCell(cell)
 	cell:toggleIsOccupied()
+	if(cell.isOccupied == 1) then
+		sounds[2]:play()
+	end
 	drawGrid()
 end
 function playdate.AButtonDown() 
 	local cell = rows[selectedRow].column[selectedColumn]
 	toggleCell(cell)
-	cell:countOcuupiedNeighbors()
-	print(cell.occupiedNeighbors)	
+	--cell:countOcuupiedNeighbors()
+	--print(cell.occupiedNeighbors)	
 end
 
 function playdate.BButtonDown()
@@ -172,16 +199,28 @@ function playdate.BButtonDown()
 end
 
 function playdate.leftButtonDown()
-	if selectedColumn > 1 then select(selectedColumn-1, selectedRow) end
+	if selectedColumn > 1 then
+		 select(selectedColumn-1, selectedRow) 
+		 sounds[4]:play()
+	end
 end
 
 function playdate.rightButtonDown()
-	if selectedColumn < 25 then select(selectedColumn+1, selectedRow) end
+	if selectedColumn < 25 then 
+		select(selectedColumn+1, selectedRow) 
+		sounds[4]:play()
+	end
 end
 function playdate.upButtonDown()
-	if selectedRow > 1 then select(selectedColumn, selectedRow-1) end
+	if selectedRow > 1 then 
+		select(selectedColumn, selectedRow-1)
+		sounds[1]:play()
+	end
 end
 
 function playdate.downButtonDown()
-	if selectedRow < 15 then select(selectedColumn, selectedRow+1) end
+	if selectedRow < 15 then
+		 select(selectedColumn, selectedRow+1)
+		 sounds[3]:play()
+	end
 end
