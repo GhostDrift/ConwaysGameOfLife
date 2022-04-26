@@ -151,10 +151,10 @@ end
 initialize()
 drawGrid()
 local reverseCount = 0
+local xOffset = 1;
+increment = 1;
 function playdate.update()
-	if(playdate.isCrankDocked())then
-		playdate.ui.crankIndicator:update()
-	end
+	
 
 	local crankChange = playdate.getCrankTicks(4)
 	-- local crankChange = playdate.getCrankChange()
@@ -173,6 +173,13 @@ function playdate.update()
 		end
 	end
 	grid:draw(0,0)
+	if(playdate.isCrankDocked())then
+		playdate.ui.crankIndicator:update(xOffset)
+		if(xOffset == 6 or xOffset == -6) then
+			increment = ~increment
+		end
+			xOffset += increment
+	end
 end
 local function select(column,row)
 	selectedRow = row
