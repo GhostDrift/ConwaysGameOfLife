@@ -150,9 +150,8 @@ function updateCells()
 	--print("done updating")
 end
 local menu = playdate.getSystemMenu()
-
-local menuItem, error = menu:addMenuItem("How To Play", function()
-    gfx.drawRect(12, 12, 50, 50, 1)
+local menuItem, error = menu:addMenuItem(menuText, function()
+    toggleMenu()
 end)
 initialize()
 drawGrid()
@@ -160,6 +159,7 @@ local reverseCount = 0
 local xOffset = 1;
 increment = 1;
 local playingGame = true;
+
 function playdate.update()
 	if(playingGame)then
 		local crankChange = playdate.getCrankTicks(4)
@@ -179,19 +179,19 @@ function playdate.update()
 			end
 		end
 		grid:draw(0,0)
-			if(playdate.isCrankDocked())then
-				playdate.ui.crankIndicator:update(xOffset)
-				if(xOffset == 4	 or xOffset == -8) then
-					increment = ~increment
-				end
-					xOffset += increment
+		if(playdate.isCrankDocked())then
+			playdate.ui.crankIndicator:update(xOffset)
+			if(xOffset == 4	 or xOffset == -8) then
+				increment = ~increment
 			end
-		else 
-			grid:draw(0,0)
-			gfx.fillRect(6, 6, 388, 228)
+				xOffset += increment
+		end
+	else 
+		grid:draw(0,0)
+		gfx.fillRect(6, 6, 388, 228)
 	end
 	--gfx.drawRect(12, 12, 50, 50, 1)
-	--
+	print("upated")
 end
 -- function to select a cell
 local function select(column,row)
@@ -199,7 +199,14 @@ local function select(column,row)
 	selectedColumn = column
 	drawGrid()
 end
-
+--function to toggle the menu
+function toggleMenu()
+	if(playingGame) then
+		playingGame = false
+	else
+		playingGame = true
+	end
+end
 local function toggleCell(cell)
 	cell:toggleIsOccupied()
 	if(cell.isOccupied == 1) then
@@ -215,7 +222,11 @@ function playdate.AButtonDown()
 end
 
 function playdate.BButtonDown()
-	clearCells()
+	if(playingGame)then
+		clearCells()
+	else
+		toggleMenu()
+	end
 end
 
 function playdate.leftButtonDown()
