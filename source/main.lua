@@ -12,19 +12,20 @@ local grid = gfx.image.new(400,240)
 local ROW_HEIGHT = 16
 local CELL_INSET = 2
 local SELECTION_WIDTH = 2
+numberOfRows = 15
 local sounds = {}
 rows = {}
-selectedColumn = 1
-selectedRow = 1
+selectedColumn = 13
+selectedRow = 8
 playdate.display.setInverted(true)
 
 
 function populateRows()
-	for i = 1,15,1 do
+	for i = 1,numberOfRows,1 do
 		rows[i] = Row(i)
 	end
 	local cell
-	for i = 1,15,1 do
+	for i = 1,numberOfRows,1 do
 		for j = 1,25,1 do
 			cell = rows[i].column[j]
 			if i == 1 then
@@ -43,7 +44,7 @@ function populateRows()
 					cell:addNeighbor(rows[i + 1].column[j - 1],4)
 					cell:addNeighbor(rows[i].column[j -1],5)
 				end
-			elseif i == 15 then
+			elseif i == numberOfRows then
 				if j == 1 then
 					cell:addNeighbor(rows[i-1].column[j],1)
 					cell:addNeighbor(rows[i -1].column[j +1],2)
@@ -112,7 +113,7 @@ end
 local function drawGrid()
 	gfx.lockFocus(grid)
 	gfx.clear(gfx.kColorWhite)
-	for row = 1,15 do
+	for row = 1,numberOfRows,1 do
 		for col = 1,25 do
 			drawCell(col,row)
 		end
@@ -125,7 +126,7 @@ function initialize()
 	playdate.ui.crankIndicator:start()
 end
 local function clearCells()
-	for i = 1, 15, 1 do
+	for i = 1, numberOfRows, 1 do
 		for j = 1,25,1 do
 			rows[i].column[j].isOccupied = 0
 		end
@@ -136,51 +137,63 @@ end
 
 function updateCells()
 	--print("updating cells")
-	for i = 1,15,1 do
+	for i = 1,numberOfRows,1 do
 		for j = 1,25,1 do
 			rows[i].column[j]:growOrDecay()
 		end
 	end
-	for i = 1,15,1 do
+	for i = 1,numberOfRows,1 do
 		for j = 1,25,1 do
 			rows[i].column[j]:update()
 		end
 	end
 	--print("done updating")
 end
+local menu = playdate.getSystemMenu()
+
+local menuItem, error = menu:addMenuItem("How To Play", function()
+    gfx.drawRect(12, 12, 50, 50, 1)
+end)
 initialize()
 drawGrid()
 local reverseCount = 0
 local xOffset = 1;
 increment = 1;
+local playingGame = true;
 function playdate.update()
-	
-
-	local crankChange = playdate.getCrankTicks(4)
-	-- local crankChange = playdate.getCrankChange()
-	if(crankChange ~= 0) then
-		if(crankChange >0)then
-			updateCells()
-			sounds[2]:play()
-			drawGrid()
-		elseif (crankChange < 0) then
-			if(reverseCount == -4) then
-				clearCells()
-				reverseCount = 0
-			else
-				reverseCount = reverseCount + crankChange
-			end	
+	if(playingGame)then
+		local crankChange = playdate.getCrankTicks(4)
+		-- local crankChange = playdate.getCrankChange()
+		if(crankChange ~= 0) then
+			if(crankChange >0)then
+				updateCells()
+				sounds[2]:play()
+				drawGrid()
+			elseif (crankChange < 0) then
+				if(reverseCount == -4) then
+					clearCells()
+					reverseCount = 0
+				else
+					reverseCount = reverseCount + crankChange
+				end	
+			end
 		end
+		grid:draw(0,0)
+			if(playdate.isCrankDocked())then
+				playdate.ui.crankIndicator:update(xOffset)
+				if(xOffset == 4	 or xOffset == -8) then
+					increment = ~increment
+				end
+					xOffset += increment
+			end
+		else 
+			grid:draw(0,0)
+			gfx.fillRect(6, 6, 388, 228)
 	end
-	grid:draw(0,0)
-	if(playdate.isCrankDocked())then
-		playdate.ui.crankIndicator:update(xOffset)
-		if(xOffset == 6 or xOffset == -6) then
-			increment = ~increment
-		end
-			xOffset += increment
-	end
+	--gfx.drawRect(12, 12, 50, 50, 1)
+	--
 end
+-- function to select a cell
 local function select(column,row)
 	selectedRow = row
 	selectedColumn = column
@@ -226,7 +239,7 @@ function playdate.upButtonDown()
 end
 
 function playdate.downButtonDown()
-	if selectedRow < 15 then
+	if selectedRow < numberOfRows then
 		 select(selectedColumn, selectedRow+1)
 		 sounds[3]:play()
 	end
