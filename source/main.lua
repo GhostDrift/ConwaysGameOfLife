@@ -150,7 +150,7 @@ function updateCells()
 	--print("done updating")
 end
 local menu = playdate.getSystemMenu()
-local menuItem, error = menu:addMenuItem(menuText, function()
+local menuItem, error = menu:addMenuItem("How To Play", function()
     toggleMenu()
 end)
 initialize()
@@ -159,6 +159,11 @@ local reverseCount = 0
 local xOffset = 1;
 increment = 1;
 local playingGame = true;
+-- function to display the instructions 
+local function howTo()
+	grid:draw(0,0)
+	gfx.fillRect(6, 6, 388, 228)
+end
 
 function playdate.update()
 	if(playingGame)then
@@ -187,8 +192,7 @@ function playdate.update()
 				xOffset += increment
 		end
 	else 
-		grid:draw(0,0)
-		gfx.fillRect(6, 6, 388, 228)
+		howTo()
 	end
 	--gfx.drawRect(12, 12, 50, 50, 1)
 	print("upated")
@@ -199,7 +203,7 @@ local function select(column,row)
 	selectedColumn = column
 	drawGrid()
 end
---function to toggle the menu
+--function to toggle the instructions
 function toggleMenu()
 	if(playingGame) then
 		playingGame = false
@@ -207,6 +211,7 @@ function toggleMenu()
 		playingGame = true
 	end
 end
+
 local function toggleCell(cell)
 	cell:toggleIsOccupied()
 	if(cell.isOccupied == 1) then
