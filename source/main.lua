@@ -157,13 +157,18 @@ initialize()
 drawGrid()
 local reverseCount = 0
 local xOffset = 1;
-increment = 1;
+local increment = 1;
 local playingGame = true;
+local instructionsPage = 1
+local instructionHeadderText = {"Controls","How it works","Empty Cell Rules","Populated Cell Rules"}
+local instructionText = {"Move the cursor with the D-Pad\nToggle cells wiht the A button\nClear the screen with the B button\n","Populate cells\nTurn the crank clockwise to advance\nCounterclockwise to clear the screen","Cells with three neighbors will become populated","Only cells with three neighbors survive"}
 -- function to display the instructions 
 local function howTo()
 	grid:draw(0,0)
 	gfx.fillRect(6, 6, 388, 228)
+	gfx.drawText(instructionHeadderText[instructionsPage],18,18)
 end
+-- main game play function
 local function mainGamePlay()
 	local crankChange = playdate.getCrankTicks(4)
 	-- local crankChange = playdate.getCrankChange()
@@ -217,8 +222,6 @@ end
 function playdate.AButtonDown() 
 	local cell = rows[selectedRow].column[selectedColumn]
 	toggleCell(cell)
-	--cell:countOcuupiedNeighbors()
-	--print(cell.occupiedNeighbors)	
 end
 
 function playdate.BButtonDown()
@@ -262,6 +265,4 @@ function playdate.update()
 	else 
 		howTo()
 	end
-	--gfx.drawRect(12, 12, 50, 50, 1)
-	print("upated")
 end
