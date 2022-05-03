@@ -164,39 +164,34 @@ local function howTo()
 	grid:draw(0,0)
 	gfx.fillRect(6, 6, 388, 228)
 end
-
-function playdate.update()
-	if(playingGame)then
-		local crankChange = playdate.getCrankTicks(4)
-		-- local crankChange = playdate.getCrankChange()
-		if(crankChange ~= 0) then
-			if(crankChange >0)then
-				updateCells()
-				sounds[2]:play()
-				drawGrid()
-			elseif (crankChange < 0) then
-				if(reverseCount == -4) then
-					clearCells()
-					reverseCount = 0
-				else
-					reverseCount = reverseCount + crankChange
-				end	
-			end
+local function mainGamePlay()
+	local crankChange = playdate.getCrankTicks(4)
+	-- local crankChange = playdate.getCrankChange()
+	if(crankChange ~= 0) then
+		if(crankChange >0)then
+			updateCells()
+			sounds[2]:play()
+			drawGrid()
+		elseif (crankChange < 0) then
+			if(reverseCount == -4) then
+				clearCells()
+				reverseCount = 0
+			else
+				reverseCount = reverseCount + crankChange
+			end	
 		end
-		grid:draw(0,0)
-		if(playdate.isCrankDocked())then
-			playdate.ui.crankIndicator:update(xOffset)
-			if(xOffset == 4	 or xOffset == -8) then
-				increment = ~increment
-			end
-				xOffset += increment
-		end
-	else 
-		howTo()
 	end
-	--gfx.drawRect(12, 12, 50, 50, 1)
-	print("upated")
+	grid:draw(0,0)
+	if(playdate.isCrankDocked())then
+		playdate.ui.crankIndicator:update(xOffset)
+		if(xOffset == 4	 or xOffset == -8) then
+			increment = ~increment
+		end
+			xOffset += increment
+	end
 end
+
+
 -- function to select a cell
 local function select(column,row)
 	selectedRow = row
@@ -259,4 +254,14 @@ function playdate.downButtonDown()
 		 select(selectedColumn, selectedRow+1)
 		 sounds[3]:play()
 	end
+end
+-- update method
+function playdate.update()
+	if(playingGame)then
+		mainGamePlay()
+	else 
+		howTo()
+	end
+	--gfx.drawRect(12, 12, 50, 50, 1)
+	print("upated")
 end
