@@ -161,14 +161,20 @@ local xOffset = 1;
 local increment = 1;
 local playingGame = true;
 local instructionsPage = 1
-local instructionHeadderText = {"Controls","How it works","Empty Cell Rules","Populated Cell Rules"}
-local instructionText = {"Move the cursor with the D-Pad\nToggle cells wiht the A button\nClear the screen with the B button\n","Populate cells\nTurn the crank clockwise to advance\nCounterclockwise to clear the screen","Cells with three neighbors will become populated","Only cells with three neighbors survive"}
+local instructionHeadderText = {"Controls:","How it works:","Cell rules:"}
+local instructionText = {"Move the cursor with the D-Pad\n\nToggle cells with the A button\n\nClear the screen with the B button\n\n","Populate cells\n\nTurn the crank clockwise to advance the simulation\n\nTurn the crank counterclockwise one full rotation\nto clear the screen","Empty cells with three neighbors will become populated\n\nPopulated cells with only three neighbors survive\n\nif they have more or less, they will die."}
+local instructionPageLocationText = {"     1/3 >>","<< 2/3 >>", "<< 3/3"}
 -- function to display the instructions 
 local function howTo()
 	grid:draw(0,0)
+	gfx.setColor(gfx.kColorWhite)
 	gfx.fillRect(6, 6, 388, 228)
-	gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
+	gfx.setColor(gfx.kColorBlack)
+	gfx.drawRect(7,7,387,227,2)
 	gfx.drawText(instructionHeadderText[instructionsPage],18,18)
+	gfx.drawText(instructionText[instructionsPage],25,60)
+	gfx.drawText(instructionPageLocationText[instructionsPage],18,200)
+	gfx.drawText("Press B to close", 200,200)
 end
 -- main game play function
 local function mainGamePlay()
@@ -209,10 +215,14 @@ end
 function toggleMenu()
 	if(playingGame) then
 		playingGame = false
+		playdate.display.setInverted(false)
+		--gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
+
 	else
 		playingGame = true
 		gfx.clear(gfx.kColorWhite)
-		gfx.setImageDrawMode(gfx.kColorBlack)
+		playdate.display.setInverted(true)
+		--gfx.setImageDrawMode(gfx.kColorBlack)
 	end
 end
 
@@ -223,6 +233,7 @@ local function toggleCell(cell)
 	end
 	drawGrid()
 end
+--button functions
 function playdate.AButtonDown() 
 	local cell = rows[selectedRow].column[selectedColumn]
 	toggleCell(cell)
@@ -237,29 +248,45 @@ function playdate.BButtonDown()
 end
 
 function playdate.leftButtonDown()
-	if selectedColumn > 1 then
-		 select(selectedColumn-1, selectedRow) 
-		 sounds[4]:play()
+	if(playingGame)then
+		if selectedColumn > 1 then
+			select(selectedColumn-1, selectedRow) 
+			sounds[4]:play()
+	   end
+	else
+		if(instructionsPage >1) then
+			instructionsPage -= 1
+		end
 	end
 end
 
 function playdate.rightButtonDown()
-	if selectedColumn < 25 then 
-		select(selectedColumn+1, selectedRow) 
-		sounds[4]:play()
+	if(playingGame)then
+		if selectedColumn < 25 then 
+			select(selectedColumn+1, selectedRow) 
+			sounds[4]:play()
+		end
+	else
+		if(instructionsPage <3) then
+			instructionsPage += 1
+		end
 	end
 end
 function playdate.upButtonDown()
-	if selectedRow > 1 then 
-		select(selectedColumn, selectedRow-1)
-		sounds[1]:play()
+	if (playingGame)then
+		if selectedRow > 1 then 
+			select(selectedColumn, selectedRow-1)
+			sounds[1]:play()
+		end
 	end
 end
 
 function playdate.downButtonDown()
-	if selectedRow < numberOfRows then
-		 select(selectedColumn, selectedRow+1)
-		 sounds[3]:play()
+	if (playingGame) then
+		if selectedRow < numberOfRows then
+			select(selectedColumn, selectedRow+1)
+			sounds[3]:play()
+	   end
 	end
 end
 -- update method
