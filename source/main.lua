@@ -20,6 +20,7 @@ selectedRow = 8
 playdate.display.setInverted(true)
 
 
+
 function populateRows()
 	for i = 1,numberOfRows,1 do
 		rows[i] = Row(i)
@@ -166,6 +167,7 @@ local instructionText = {"Move the cursor with the D-Pad\nToggle cells wiht the 
 local function howTo()
 	grid:draw(0,0)
 	gfx.fillRect(6, 6, 388, 228)
+	gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
 	gfx.drawText(instructionHeadderText[instructionsPage],18,18)
 end
 -- main game play function
@@ -209,6 +211,8 @@ function toggleMenu()
 		playingGame = false
 	else
 		playingGame = true
+		gfx.clear(gfx.kColorWhite)
+		gfx.setImageDrawMode(gfx.kColorBlack)
 	end
 end
 
