@@ -94,6 +94,20 @@ local function initializeSounds()
 	sounds[3] = playdate.sound.fileplayer.new("sounds/CongaLow")
 	sounds[4] = playdate.sound.fileplayer.new("sounds/CongaMid")
 	sounds[5] = playdate.sound.fileplayer.new("sounds/Maraca")
+	for i =6,11 do
+		sounds[i] = snd.synth.new(snd.kWaveSine)
+		if(i == 6 or i == 7 or i == 8) then
+			sounds[i]:setADSR(0.01,0.01,0.01,0)
+		end
+	end
+	sounds[9]:setWaveform(snd.kWaveNoise)
+	sounds[9]:setADSR(0,0.2,0.2,0.43)
+	sounds[10]:setADSR(0,0.1,0.07,0.2)
+end
+
+local function playNote(i)
+	local synth = sounds[i]
+	
 end
 
 local function drawCell(col,row)
