@@ -100,6 +100,7 @@ local function initializeSounds()
 	sounds[8] = Note(0.01,0.01,0.01,0,800,0.02,0.5,snd.kWaveSine)
 	sounds[9] = Note(0,0.2,0.2,0.43,1000,0.1,0.5,snd.kWaveNoise)
 	sounds[10] = Note(0,0.1,0.07,0.2,700,0.1,0.5,snd.kWaveSine)
+	sounds[11] = Note(0,0.1,0.04,0,232,0.1,0.5,snd.kWavePOVosim)
 end
 
 local function drawCell(col,row)
@@ -167,8 +168,8 @@ drawGrid()
 local reverseCount = 0
 local xOffset = 1;
 local increment = 1;
-local playingGame = false;
-local instructionsPage = 3
+local playingGame = true;
+local instructionsPage = 1
 local instructionHeadderText = {"Controls:","How To Play:","Cell Rules:"}
 local instructionText = {"Move the cursor with the D-Pad\n\nToggle cells with the A button\n\nClear the screen with the B button\n\n","Populate some of the cells\n\nTurn the crank clockwise to advance the\nsimulation and watch what happens\n\nTurn the crank counterclockwise one full\nrotation to clear the screen","Empty cells with three neighbors will become\npopulated\n\nPopulated cells with only three neighbors\nsurvive\n\nIf a populated cell has more or less then three\nneighbors, it dies"}
 local instructionPageLocationText = {"     1/3 >>","<< 2/3 >>", "<< 3/3"}
@@ -261,11 +262,15 @@ function playdate.leftButtonDown()
 		if selectedColumn > 1 then
 			select(selectedColumn-1, selectedRow) 
 			sounds[6]:play()
-	   end
+		else
+			sounds[11]:play()
+		end
 	else
 		if(instructionsPage >1) then
 			instructionsPage -= 1
 			sounds[6]:play()
+		else
+			sounds[11]:play()
 		end
 	end
 end
@@ -275,11 +280,15 @@ function playdate.rightButtonDown()
 		if selectedColumn < 25 then 
 			select(selectedColumn+1, selectedRow) 
 			sounds[6]:play()
+		else
+			sounds[11]:play()
 		end
 	else
 		if(instructionsPage <3) then
 			instructionsPage += 1
 			sounds[6]:play()
+		else
+			sounds[11]:play()
 		end
 	end
 end
@@ -288,6 +297,8 @@ function playdate.upButtonDown()
 		if selectedRow > 1 then 
 			select(selectedColumn, selectedRow-1)
 			sounds[8]:play()
+		else
+			sounds[11]:play()
 		end
 	end
 end
@@ -297,7 +308,9 @@ function playdate.downButtonDown()
 		if selectedRow < numberOfRows then
 			select(selectedColumn, selectedRow+1)
 			sounds[7]:play()
-	   end
+		else
+			sounds[11]:play()
+		end
 	end
 end
 -- update method
