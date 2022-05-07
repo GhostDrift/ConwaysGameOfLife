@@ -6,6 +6,7 @@ import "CoreLibs/crank"
 import "CoreLibs/ui"
 import "Cell"
 import "Row"
+import "Note"
 
 local gfx = playdate.graphics
 local grid = gfx.image.new(400,240)
@@ -94,20 +95,11 @@ local function initializeSounds()
 	sounds[3] = playdate.sound.fileplayer.new("sounds/CongaLow")
 	sounds[4] = playdate.sound.fileplayer.new("sounds/CongaMid")
 	sounds[5] = playdate.sound.fileplayer.new("sounds/Maraca")
-	for i =6,11 do
-		sounds[i] = snd.synth.new(snd.kWaveSine)
-		if(i == 6 or i == 7 or i == 8) then
-			sounds[i]:setADSR(0.01,0.01,0.01,0)
-		end
-	end
-	sounds[9]:setWaveform(snd.kWaveNoise)
-	sounds[9]:setADSR(0,0.2,0.2,0.43)
-	sounds[10]:setADSR(0,0.1,0.07,0.2)
-end
-
-local function playNote(i)
-	local synth = sounds[i]
-	
+	sounds[6] = Note(0.01,0.01,0.01,0,750,0.02,0.5,snd.kWaveSine)
+	sounds[7] = Note(0.01,0.01,0.01,0,700,0.02,0.5,snd.kWaveSine)
+	sounds[8] = Note(0.01,0.01,0.01,0,800,0.02,0.5,snd.kWaveSine)
+	sounds[9] = Note(0,0.2,0.2,0.43,1000,0.1,0.5,snd.kWaveNoise)
+	sounds[10] = Note(0,0.1,0.07,0.2,700,0.1,0.5,snd.kWaveSine)
 end
 
 local function drawCell(col,row)
@@ -149,7 +141,7 @@ local function clearCells()
 		end
 	end
 	drawGrid()
-	sounds[5]:play()
+	sounds[9]:play()
 end
 
 function updateCells()
@@ -260,6 +252,7 @@ function playdate.BButtonDown()
 		clearCells()
 	else
 		toggleMenu()
+		sounds[10]:play()
 	end
 end
 
@@ -267,13 +260,12 @@ function playdate.leftButtonDown()
 	if(playingGame)then
 		if selectedColumn > 1 then
 			select(selectedColumn-1, selectedRow) 
-			--sounds[4]:play()
-			synth:setADSR(0.01,0.01,0.0,0.01)
-			synth:playNote(700,0.5,0.2)
+			sounds[6]:play()
 	   end
 	else
 		if(instructionsPage >1) then
 			instructionsPage -= 1
+			sounds[6]:play()
 		end
 	end
 end
@@ -282,13 +274,12 @@ function playdate.rightButtonDown()
 	if(playingGame)then
 		if selectedColumn < 25 then 
 			select(selectedColumn+1, selectedRow) 
-			--sounds[4]:play()
-			synth:setADSR(0.01,0.01,0.0,0.01)
-			synth:playNote(700,0.5,0.2)
+			sounds[6]:play()
 		end
 	else
 		if(instructionsPage <3) then
 			instructionsPage += 1
+			sounds[6]:play()
 		end
 	end
 end
@@ -296,7 +287,7 @@ function playdate.upButtonDown()
 	if (playingGame)then
 		if selectedRow > 1 then 
 			select(selectedColumn, selectedRow-1)
-			sounds[1]:play()
+			sounds[8]:play()
 		end
 	end
 end
@@ -305,7 +296,7 @@ function playdate.downButtonDown()
 	if (playingGame) then
 		if selectedRow < numberOfRows then
 			select(selectedColumn, selectedRow+1)
-			sounds[3]:play()
+			sounds[7]:play()
 	   end
 	end
 end

@@ -9,3 +9,6 @@ function Note:init(attack,decay,sustain,release,pitch,length,vol,wave)
     self.vol = vol
 end
 
+function Note:play()
+    self.synth:playNote(self.pitch,self.vol,self.length)
+end
