@@ -167,8 +167,8 @@ drawGrid()
 local reverseCount = 0
 local xOffset = 1;
 local increment = 1;
-local playingGame = true;
-local instructionsPage = 1
+local playingGame = false;
+local instructionsPage = 3
 local instructionHeadderText = {"Controls:","How To Play:","Cell Rules:"}
 local instructionText = {"Move the cursor with the D-Pad\n\nToggle cells with the A button\n\nClear the screen with the B button\n\n","Populate some of the cells\n\nTurn the crank clockwise to advance the\nsimulation and watch what happens\n\nTurn the crank counterclockwise one full\nrotation to clear the screen","Empty cells with three neighbors will become\npopulated\n\nPopulated cells with only three neighbors\nsurvive\n\nIf a populated cell has more or less then three\nneighbors, it dies"}
 local instructionPageLocationText = {"     1/3 >>","<< 2/3 >>", "<< 3/3"}
@@ -181,8 +181,8 @@ local function howTo()
 	gfx.drawRect(7,7,387,227,2)
 	gfx.drawText(instructionHeadderText[instructionsPage],18,18)
 	gfx.drawText(instructionText[instructionsPage],30,50)
-	gfx.drawText(instructionPageLocationText[instructionsPage],18,200)
-	gfx.drawText("Press B to close", 250,200)
+	gfx.drawText(instructionPageLocationText[instructionsPage],18,210)
+	gfx.drawText("Press B to close", 260,210)
 end
 -- main game play function
 local function mainGamePlay()
