@@ -14,6 +14,8 @@ local CELL_INSET = 2
 local SELECTION_WIDTH = 2
 numberOfRows = 15
 local sounds = {}
+local snd = playdate.sound
+local synth = snd.synth.new()
 rows = {}
 selectedColumn = 13
 selectedRow = 8
@@ -159,7 +161,7 @@ drawGrid()
 local reverseCount = 0
 local xOffset = 1;
 local increment = 1;
-local playingGame = false;
+local playingGame = true;
 local instructionsPage = 1
 local instructionHeadderText = {"Controls:","How To Play:","Cell Rules:"}
 local instructionText = {"Move the cursor with the D-Pad\n\nToggle cells with the A button\n\nClear the screen with the B button\n\n","Populate some of the cells\n\nTurn the crank clockwise to advance the\nsimulation and watch what happens\n\nTurn the crank counterclockwise one full\nrotation to clear the screen","Empty cells with three neighbors will become\npopulated\n\nPopulated cells with only three neighbors\nsurvive\n\nIf a populated cell has more or less then three\nneighbors, it dies"}
@@ -251,7 +253,9 @@ function playdate.leftButtonDown()
 	if(playingGame)then
 		if selectedColumn > 1 then
 			select(selectedColumn-1, selectedRow) 
-			sounds[4]:play()
+			--sounds[4]:play()
+			synth:setADSR(0.01,0.01,0.0,0.01)
+			synth:playNote(700,0.5,0.2)
 	   end
 	else
 		if(instructionsPage >1) then
@@ -264,7 +268,9 @@ function playdate.rightButtonDown()
 	if(playingGame)then
 		if selectedColumn < 25 then 
 			select(selectedColumn+1, selectedRow) 
-			sounds[4]:play()
+			--sounds[4]:play()
+			synth:setADSR(0.01,0.01,0.0,0.01)
+			synth:playNote(700,0.5,0.2)
 		end
 	else
 		if(instructionsPage <3) then
