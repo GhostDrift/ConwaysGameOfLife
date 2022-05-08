@@ -16,14 +16,13 @@ local SELECTION_WIDTH = 2
 numberOfRows = 15
 local sounds = {}
 local snd = playdate.sound
-local synth = snd.synth.new()
 rows = {}
 selectedColumn = 13
 selectedRow = 8
 playdate.display.setInverted(true)
 
 
-
+-- function to populate the rows table
 function populateRows()
 	for i = 1,numberOfRows,1 do
 		rows[i] = Row(i)
@@ -89,6 +88,7 @@ function populateRows()
 		end
 	end
 end
+--function to initialize the sounds table
 local function initializeSounds()
 	sounds[1] = playdate.sound.fileplayer.new("sounds/CongaHi")
 	sounds[2] = playdate.sound.fileplayer.new("sounds/Rimshot")
@@ -170,9 +170,9 @@ local xOffset = 1;
 local increment = 1;
 local playingGame = true;
 local instructionsPage = 1
-local instructionHeadderText = {"Controls:","How To Play:","Cell Rules:"}
-local instructionText = {"Move the cursor with the D-Pad\n\nToggle cells with the A button\n\nClear the screen with the B button\n\n","Populate some of the cells\n\nTurn the crank clockwise to advance the\nsimulation and watch what happens\n\nTurn the crank counterclockwise one full\nrotation to clear the screen","Empty cells with three neighbors will become\npopulated\n\nPopulated cells with only three neighbors\nsurvive\n\nIf a populated cell has more or less then three\nneighbors, it dies"}
-local instructionPageLocationText = {"     1/3 >>","<< 2/3 >>", "<< 3/3"}
+local instructionHeadderText = {"Controls:","How To Play:","Cell Rules:","About:","About cont:"}
+local instructionText = {"Move the cursor with the D-Pad\n\nToggle cells with the A button\n\nClear the screen with the B button\n\n","Populate some of the cells\n\nTurn the crank clockwise to advance the\nsimulation and watch what happens\n\nTurn the crank counterclockwise one full\nrotation to clear the screen","Empty cells with three neighbors will become\npopulated\n\nPopulated cells with only three neighbors\nsurvive\n\nIf a populated cell has more or less then three\nneighbors, it dies","The Game of Life is not your typical computer\ngame. It is a cellular automaton, and was\ninvented by Cambridge mathematician John\nConway. This game became widely known when\nit was mentioned in an article published by\nScientific American in 1970. It consists of a grid\nof cells which, based on a few mathematical\nrules, can live, die or multiply. Depending on the","initial conditions, the cells form various\npatterns throughout the course of the game."}
+local instructionPageLocationText = {"     1/5 >>","<< 2/5 >>", "<< 3/5 >>", "<< 4/5 >>", "<< 5/5"}
 -- function to display the instructions 
 local function howTo()
 	grid:draw(0,0)
@@ -181,7 +181,7 @@ local function howTo()
 	gfx.setColor(gfx.kColorBlack)
 	gfx.drawRect(7,7,387,227,2)
 	gfx.drawText(instructionHeadderText[instructionsPage],18,18)
-	gfx.drawText(instructionText[instructionsPage],30,50)
+	gfx.drawText(instructionText[instructionsPage],30,45)
 	gfx.drawText(instructionPageLocationText[instructionsPage],18,210)
 	gfx.drawText("Press B to close", 260,210)
 end
@@ -284,7 +284,7 @@ function playdate.rightButtonDown()
 			sounds[11]:play()
 		end
 	else
-		if(instructionsPage <3) then
+		if(instructionsPage <5) then
 			instructionsPage += 1
 			sounds[6]:play()
 		else
