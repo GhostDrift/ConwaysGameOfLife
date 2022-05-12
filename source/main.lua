@@ -163,6 +163,11 @@ local menu = playdate.getSystemMenu()
 local menuItem, error = menu:addMenuItem("How To Play", function()
     toggleMenu()
 end)
+menu:addOptionsMenuItem("Theme", {"Dark","Light"}, "Dark", 
+function(value)  
+	if value == "Dark" then playdate.display.setInverted(true) end
+	if value == "Light" then playdate.display.setInverted(false) end
+end)
 initialize()
 drawGrid()
 local reverseCount = 0
