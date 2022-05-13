@@ -1,7 +1,7 @@
 name=Conway's game of life
-author=Jessica Stojkovic
-description=This is a version of Conway's game of life for the Playdate
+author=Jessica Stojkovic, Stojkovic Technical Solutions.
+description=This is a version of Conway's game of life for the Playdate.
 bundleID=com.organization.package
-version=1.0.1
+version=1.1
 buildNumber=1
 imagePath=images
