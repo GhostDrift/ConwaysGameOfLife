@@ -7,6 +7,7 @@ import "CoreLibs/ui"
 import "Cell"
 import "Row"
 import "Note"
+import "ScreenShake"
 
 local gfx = playdate.graphics
 local grid = gfx.image.new(400,240)
