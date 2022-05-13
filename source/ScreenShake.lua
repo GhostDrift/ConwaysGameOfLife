@@ -1,11 +1,10 @@
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 
-class('ScreenShake').extends(gfx.sprite)
+class('ScreenShake').extends()
 
 function ScreenShake:init()
     self.shakeAmount = 0
-    self:add()
 end
 
 function ScreenShake:setShakeAmount(amount)
@@ -20,7 +19,7 @@ function ScreenShake:update()
         self.shakeAmount -= 1
         pd.display.setOffset(shakeX,shakeY)
     else
-        pd.displaysetOffset(0,0)
+        pd.display.setOffset(0,0)
     end
 end
 

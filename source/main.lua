@@ -21,7 +21,12 @@ rows = {}
 selectedColumn = 13
 selectedRow = 8
 playdate.display.setInverted(true)
+local screenShakeSprite = ScreenShake()
 
+--function to set the shake ammount for the screen shake
+function setShakeAmount(amount)
+	screenShakeSprite:setShakeAmount(amount)
+end
 
 -- function to populate the rows table
 function populateRows()
@@ -144,6 +149,7 @@ local function clearCells()
 	end
 	drawGrid()
 	sounds[9]:play()
+	setShakeAmount(10)
 end
 
 function updateCells()
@@ -326,4 +332,5 @@ function playdate.update()
 	else 
 		howTo()
 	end
+	screenShakeSprite:update()
 end
