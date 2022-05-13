@@ -106,7 +106,7 @@ local function initializeSounds()
 	sounds[8] = Note(0.01,0.01,0.01,0,800,0.02,0.5,snd.kWaveSine)
 	sounds[9] = Note(0,0.2,0.2,0.43,1000,0.1,0.5,snd.kWaveNoise)
 	sounds[10] = Note(0,0.1,0.07,0.2,700,0.1,0.5,snd.kWaveSine)
-	sounds[11] = Note(0,0.1,0.04,0,232,0.1,0.5,snd.kWavePOVosim)
+	sounds[11] = Note(0,0.1,0.04,0,232,0.1,1,snd.kWavePOVosim)
 end
 
 local function drawCell(col,row)
@@ -246,13 +246,19 @@ function toggleMenu()
 		--gfx.setImageDrawMode(gfx.kColorBlack)
 	end
 end
-
+-- function to toggle the occupiede value of a cell
 local function toggleCell(cell)
 	cell:toggleIsOccupied()
 	if(cell.isOccupied == 1) then
 		sounds[2]:play()
 	end
 	drawGrid()
+end
+
+-- function to shake screen and play error sound
+local function bump()
+	sounds[11]:play()
+	setShakeAmount(5)
 end
 --button functions
 function playdate.AButtonDown() 
@@ -275,14 +281,14 @@ function playdate.leftButtonDown()
 			select(selectedColumn-1, selectedRow) 
 			sounds[6]:play()
 		else
-			sounds[11]:play()
+			bump()
 		end
 	else
 		if(instructionsPage >1) then
 			instructionsPage -= 1
 			sounds[6]:play()
 		else
-			sounds[11]:play()
+			bump()
 		end
 	end
 end
@@ -293,14 +299,14 @@ function playdate.rightButtonDown()
 			select(selectedColumn+1, selectedRow) 
 			sounds[6]:play()
 		else
-			sounds[11]:play()
+			bump()
 		end
 	else
 		if(instructionsPage <5) then
 			instructionsPage += 1
 			sounds[6]:play()
 		else
-			sounds[11]:play()
+			bump()
 		end
 	end
 end
@@ -310,7 +316,7 @@ function playdate.upButtonDown()
 			select(selectedColumn, selectedRow-1)
 			sounds[8]:play()
 		else
-			sounds[11]:play()
+			bump()
 		end
 	end
 end
@@ -321,7 +327,7 @@ function playdate.downButtonDown()
 			select(selectedColumn, selectedRow+1)
 			sounds[7]:play()
 		else
-			sounds[11]:play()
+			bump()
 		end
 	end
 end
