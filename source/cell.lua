@@ -31,6 +31,7 @@ function Cell:countOcuupiedNeighbors()
             self.occupiedNeighbors = self.occupiedNeighbors +1
         end  
     end
+   -- print("occupiedNeighbors:", self.occupiedNeighbors)
 
 end
 

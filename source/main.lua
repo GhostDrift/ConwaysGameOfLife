@@ -73,7 +73,7 @@ function populateRows()
 				cell:addNeighbor(rows[i-1].column[j],1)
 				cell:addNeighbor(rows[i - 1].column[j +1],2)
 				cell:addNeighbor(rows[i].column[j + 1],3)
-				cell:addNeighbor(rows[i - 1].column[j + 1],4)
+				cell:addNeighbor(rows[i + 1].column[j + 1],4)
 				cell:addNeighbor(rows[i+1 ].column[j],5)
 			elseif j == 25 then
 				cell:addNeighbor(rows[i+1].column[j],1)
@@ -252,6 +252,7 @@ local function toggleCell(cell)
 	if(cell.isOccupied == 1) then
 		sounds[2]:play()
 	end
+	-- cell:countOcuupiedNeighbors()
 	drawGrid()
 end
 
