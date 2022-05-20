@@ -22,6 +22,7 @@ selectedColumn = 13
 selectedRow = 8
 playdate.display.setInverted(true)
 local screenShakeSprite = ScreenShake()
+local menuId = 0
 
 --function to set the shake ammount for the screen shake
 function setShakeAmount(amount)
@@ -183,9 +184,15 @@ function updateCells()
 	--print("done updating")
 end
 local menu = playdate.getSystemMenu()
+-- adds how to play option to system menu
 local menuItem, error = menu:addMenuItem("How To Play", function()
-    toggleMenu()
+    toggleMenu(0)
 end)
+-- adds an example menu option to the system menu
+menu:addMenuItem("Examples", function()
+	toggleMenu(1)
+end)
+-- adds theme option to system menu
 menu:addOptionsMenuItem("Theme", {"Dark","Light"}, "Dark", 
 function(value)  
 	if value == "Dark" then playdate.display.setInverted(true) end
@@ -212,6 +219,13 @@ local function howTo()
 	gfx.drawText(instructionText[instructionsPage],30,45)
 	gfx.drawText(instructionPageLocationText[instructionsPage],18,210)
 	gfx.drawText("Press B to close", 260,210)
+end
+local function examples()
+	grid:draw(0,0)
+	gfx.setColor(gfx.kColorWhite)
+	gfx.fillRect(6, 6, 194, 228)
+	gfx.setColor(gfx.kColorBlack)
+	gfx.drawRect(7,7,193,227,2)
 end
 -- main game play function
 local function mainGamePlay()
@@ -249,9 +263,10 @@ local function select(column,row)
 	drawGrid()
 end
 --function to toggle the instructions
-function toggleMenu()
+function toggleMenu(id)
 	if(playingGame) then
 		playingGame = false
+		menuId = id
 		--playdate.display.setInverted(false)
 		--gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
 
@@ -353,8 +368,10 @@ end
 function playdate.update()
 	if(playingGame)then
 		mainGamePlay()
-	else 
+	elseif (menuId == 0) then
 		howTo()
+	else
+		examples()
 	end
 	screenShakeSprite:update()
 end
