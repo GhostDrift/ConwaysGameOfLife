@@ -135,6 +135,7 @@ local function drawGrid()
 		end
 	end
 end
+--function to clear the cells
 local function clearCells()
 	for i = 1, numberOfRows, 1 do
 		for j = 1,25,1 do
@@ -142,6 +143,11 @@ local function clearCells()
 		end
 	end
 	drawGrid()
+	
+end
+-- function to reset the board, clears cells, plays sound, and shakes screen
+local function resetCells()
+	clearCells()
 	sounds[9]:play()
 	setShakeAmount(10)
 end
@@ -158,7 +164,6 @@ end
 function initialize()
 	populateRows()
 	initializeSounds()
-	loadExample({1,25,1,25},{1,1,15,15})
 	playdate.ui.crankIndicator:start()
 end
 
@@ -219,7 +224,7 @@ local function mainGamePlay()
 			drawGrid()
 		elseif (crankChange < 0) then
 			if(reverseCount == -4) then
-				clearCells()
+				resetCells()
 				reverseCount = 0
 			else
 				reverseCount = reverseCount + crankChange
@@ -281,7 +286,7 @@ end
 
 function playdate.BButtonDown()
 	if(playingGame)then
-		clearCells()
+		resetCells()
 	else
 		toggleMenu()
 		sounds[10]:play()
