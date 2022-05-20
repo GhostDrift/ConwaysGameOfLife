@@ -135,12 +135,6 @@ local function drawGrid()
 		end
 	end
 end
-
-function initialize()
-	populateRows()
-	initializeSounds()
-	playdate.ui.crankIndicator:start()
-end
 local function clearCells()
 	for i = 1, numberOfRows, 1 do
 		for j = 1,25,1 do
@@ -151,6 +145,23 @@ local function clearCells()
 	sounds[9]:play()
 	setShakeAmount(10)
 end
+-- function to load an example shape into the grid
+local function loadExample(x,y)
+	clearCells()
+	for i = 1, #x do
+		print("y", y[i], "x", x[i])
+		rows[y[i]].column[x[i]].isOccupied = 1
+	end
+end
+
+
+function initialize()
+	populateRows()
+	initializeSounds()
+	loadExample({1,25,1,25},{1,1,15,15})
+	playdate.ui.crankIndicator:start()
+end
+
 
 function updateCells()
 	--print("updating cells")
@@ -261,6 +272,7 @@ local function bump()
 	sounds[11]:play()
 	setShakeAmount(5)
 end
+
 --button functions
 function playdate.AButtonDown() 
 	local cell = rows[selectedRow].column[selectedColumn]
