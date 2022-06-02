@@ -205,10 +205,15 @@ local xOffset = 1;
 local increment = 1;
 local playingGame = true;
 local instructionsPage = 1
+local examplesPage = 1;
 local instructionHeadderText = {"Controls:","How To Play:","Cell Rules:","About:","About cont:"}
 local instructionText = {"Move the cursor with the D-Pad\n\nToggle cells with the A button\n\nClear the screen with the B button\n\n","Populate some of the cells\n\nTurn the crank clockwise to advance the\nsimulation and watch what happens\n\nTurn the crank counterclockwise one full\nrotation to clear the screen","Empty cells with three neighbors will become\npopulated\n\nPopulated cells with only three neighbors\nsurvive\n\nIf a populated cell has more or less then three\nneighbors, it dies","The Game of Life is not your typical computer\ngame. It is a cellular automaton, and was\ninvented by Cambridge mathematician John\nConway. This game became widely known when\nit was mentioned in an article published by\nScientific American in 1970. It consists of a grid\nof cells which, based on a few mathematical\nrules, can live, die or multiply. Depending on the","initial conditions, the cells form various\npatterns throughout the course of the game."}
 local instructionPageLocationText = {"     1/5 >>","<< 2/5 >>", "<< 3/5 >>", "<< 4/5 >>", "<< 5/5"}
--- function to display the instructions 
+local exampleTypeText = {"Still Life", "Oscillator", "Spaceship"}
+local exampleTypeMap = {1,1,1,1,1,2,2,2,2,2,3,3,3,3}
+local exampleTitleText = {"Block","Beehive", "Loaf", "Boat", "Tub", "Blinker","Toad", "Beacon", "Pulsar", "Pentadecathalon", "Glider", "Lightweight\nSpaceship", "Middleweight\nSpaceship", "Heavyweight\nSpaceship"}
+local examplePageLocationText = {"     1/14 >>","<< 2/14 >>", "<< 3/14 >>", "<< 4/14 >>", "<< 5/14 >>", "<< 6/14 >>", "<< 7/14 >>", "<< 8/14 >>","<< 9/14 >>", "<< 10/14 >>", "<< 11/14 >>", "<< 12/14 >>", "<< 13/14 >>", "<< 14/14 "}
+-- function to display the instructions
 local function howTo()
 	grid:draw(0,0)
 	gfx.setColor(gfx.kColorWhite)
@@ -220,12 +225,17 @@ local function howTo()
 	gfx.drawText(instructionPageLocationText[instructionsPage],18,210)
 	gfx.drawText("Press B to close", 260,210)
 end
+--function to display examples
 local function examples()
 	grid:draw(0,0)
 	gfx.setColor(gfx.kColorWhite)
 	gfx.fillRect(6, 6, 194, 228)
 	gfx.setColor(gfx.kColorBlack)
 	gfx.drawRect(7,7,193,227,2)
+	gfx.drawText("Example Shapes", 18,18)
+	gfx.drawText("Type: "..exampleTypeText[exampleTypeMap[examplesPage]],20,88)
+	gfx.drawText("Name: "..exampleTitleText[examplesPage], 20,45)
+	gfx.drawText(examplePageLocationText[examplesPage], 18,210)
 end
 -- main game play function
 local function mainGamePlay()
@@ -295,8 +305,14 @@ end
 
 --button functions
 function playdate.AButtonDown() 
-	local cell = rows[selectedRow].column[selectedColumn]
-	toggleCell(cell)
+	if(playingGame) then
+		local cell = rows[selectedRow].column[selectedColumn]
+		toggleCell(cell)
+	else
+		if(menuId == 1) then
+			
+		end
+	end
 end
 
 function playdate.BButtonDown()
@@ -317,11 +333,20 @@ function playdate.leftButtonDown()
 			bump()
 		end
 	else
-		if(instructionsPage >1) then
-			instructionsPage -= 1
-			sounds[6]:play()
+		if(menuId == 0) then
+			if(instructionsPage >1) then
+				instructionsPage -= 1
+				sounds[6]:play()
+			else
+				bump()
+			end
 		else
-			bump()
+			if(examplesPage >1) then
+				examplesPage -= 1
+				sounds[6]:play()
+			else
+				bump()
+			end
 		end
 	end
 end
@@ -335,11 +360,20 @@ function playdate.rightButtonDown()
 			bump()
 		end
 	else
-		if(instructionsPage <5) then
-			instructionsPage += 1
-			sounds[6]:play()
+		if(menuId == 0) then
+			if(instructionsPage <5) then
+				instructionsPage += 1
+				sounds[6]:play()
+			else
+				bump()
+			end
 		else
-			bump()
+			if(examplesPage <14) then
+				examplesPage += 1
+				sounds[6]:play()
+			else
+				bump()
+			end
 		end
 	end
 end
