@@ -152,7 +152,7 @@ local function resetCells()
 	sounds[9]:play()
 	setShakeAmount(10)
 end
--- function to load an example shape into the grid
+-- function to load an example shape into the grid - takes in a table of columbs and a table of rows
 local function loadExample(x,y)
 	clearCells()
 	for i = 1, #x do
@@ -189,10 +189,10 @@ local menuItem, error = menu:addMenuItem("How To Play", function()
     toggleMenu(0)
 end)
 -- adds an example menu option to the system menu
-menu:addMenuItem("Examples", function()
-	toggleMenu(1)
-end)
--- adds theme option to system menu
+    --menu:addMenuItem("Examples", function()
+    --	toggleMenu(1)
+    --end)
+    -- adds theme option to system menu
 menu:addOptionsMenuItem("Theme", {"Dark","Light"}, "Dark", 
 function(value)  
 	if value == "Dark" then playdate.display.setInverted(true) end
