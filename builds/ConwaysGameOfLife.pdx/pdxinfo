@@ -5,5 +5,5 @@ bundleID=com.organization.package
 version=1.3
 buildNumber=1
 imagePath=images
-pdxversion=10900
-buildtime=712338641
+pdxversion=20100
+buildtime=752887167
